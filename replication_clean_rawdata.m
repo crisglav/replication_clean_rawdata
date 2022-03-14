@@ -85,6 +85,6 @@ for iSubj=1:nSubj
     xticklabels({ALLEEG(1).chanlocs.labels});
 end
 sgtitle(['ChannelCriterion = ' num2str(channelcriterion)]);
-saveas(f,['replication_CRD_' num2str(channelcriterion) '_nSamples' num2str(numsamples) '.png']);
+saveas(f,fullfile('figures',[figures/replication_CRD_' num2str(channelcriterion) '_nSamples' num2str(numsamples) '.png']));
 %     saveas(f,['replication_CRD_' num2str(channelcriterion(iC)) '_hp1Hz.png']);
 close(f);
