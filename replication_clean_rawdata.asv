@@ -7,7 +7,7 @@
 clear; close all;
 % EEGLAB start and clean_rawdata
 run(fullfile('..','..','eeglab','eeglab.m'));
-addpath(fullfile('..','..','clean_rawdata')); % https://github.com/crisglav/clean_rawdata/tree/fixes
+addpath(fullfile('..','..','clean_rawdata'));
 
 % Datapaths
 inputfolder = fullfile('..','..','eeg_datasets','rawBIDS');
@@ -27,28 +27,27 @@ badchans = nan(nChans,nReps,nSubj);
 highpass = [0.25 0.75]; % default
 % highpass = [1 1.5];
 
-% Number of samples for RANSAC (increasing number makes it more stable)
-% numsamples = 50; % default
-numsamples = 100;
+% Number of samples for RANSAC
+numsamples = 50; % default
+% numsamples = 100;
 % numsamples = 500;
 % numsamples = 1000;
 
-% Correlation parameter (decreasing number makes it more lax and stable)
-channelcriterion = 0.7;
-% channelcriterion = 0.8; % default
+% Correlation parameter (channelCriterion)
+% channelcriterion = 0.7;
+channelcriterion = 0.8; % default
 % channelcriterion = 0.9;
 
-% Subset size of channels used for RANSAC (decreasing % of channels makes it more unstable)
+% Subset size (% of channels used for RANSAC)
 subsetsize = 0.25; % default
-% subsetsize = 0.11;
-% subsetsize = 0.35;
+% subsetsize = 0.11; % to try
 
 % Reset rng
 resetrng = false;
 
 %% Loop over repetitions
 for iRep =1:nReps
-    [ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab; % If I comment this line results are replicable
+%     [ALLEEG, EEG, CURRENTSET, ALLCOM] = eeglab; % If I comment this line results are replicable
     % call BIDS importer
     [STUDY, ALLEEG] = pop_importbids(inputfolder,'bidsevent','on','bidschanloc','on',...
         'studyName',studyname,'bidstask',task,'outputdir',outputfolder);
@@ -93,8 +92,8 @@ for iSubj=1:nSubj
     xticks(1:nChans);
     xticklabels({ALLEEG(1).chanlocs.labels});
 end
-sgtitle(['ChannelCriterion = ' num2str(channelcriterion) '; NumSamples = ' num2str(numsamples) '; SubsetSize = ' num2str(subsetsize)]);
+sgtitle(['ChannelCriterion = ' num2str(channelcriterion)]);
 saveas(f,fullfile('figures',['replication_CRD_' num2str(channelcriterion) '_nSamples' num2str(numsamples) ...
-    '_SubsetSize', num2str(subsetsize) '_ResetRng' num2str(resetrng) '.png']));
+    '_ResetRng_ ' num2str(resetrng) '.png']));
 %     saveas(f,['replication_CRD_' num2str(channelcriterion(iC)) '_hp1Hz.png']);
 close(f);
